@@ -52,6 +52,8 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        
         if($request->user()->id !== $id){
             return response()->json(['error' => 'Unauthorized'], 401);
         }
