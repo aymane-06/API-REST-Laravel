@@ -21,3 +21,5 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware(JWTMiddlew
 // Application routes
 Route::apiResource('applications', 'App\Http\Controllers\ApplicationController')->middleware(JWTMiddleware::class);
 Route::patch('applications/{application}/status', 'App\Http\Controllers\ApplicationController@changeStatus')->middleware(JWTMiddleware::class);
+// Competences routes
+Route::apiResource('competences', 'App\Http\Controllers\CompetencesController');
