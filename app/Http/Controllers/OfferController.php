@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateofferRequest;
 
 class OfferController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      */

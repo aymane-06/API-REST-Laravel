@@ -8,12 +8,18 @@ use Illuminate\Auth\Access\Response;
 
 class OfferPolicy
 {
+    public function before(User $user, $ability)
+    {
+        if ($user->role->name === 'admin') {
+            return true;
+        }
+    }
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +27,8 @@ class OfferPolicy
      */
     public function view(User $user, offer $offer): bool
     {
-        return false;
+        return $user->id === $offer->user_id;
+        
     }
 
     /**
@@ -29,7 +36,7 @@ class OfferPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->role->name === 'recruteur';
     }
 
     /**
@@ -37,7 +44,7 @@ class OfferPolicy
      */
     public function update(User $user, offer $offer): bool
     {
-        return false;
+        return $user->id === $offer->user_id;
     }
 
     /**
@@ -45,7 +52,7 @@ class OfferPolicy
      */
     public function delete(User $user, offer $offer): bool
     {
-        return false;
+        return $user->id === $offer->user_id;
     }
 
     /**
@@ -53,7 +60,7 @@ class OfferPolicy
      */
     public function restore(User $user, offer $offer): bool
     {
-        return false;
+        return $user->id === $offer->user_id;
     }
 
     /**
@@ -61,6 +68,6 @@ class OfferPolicy
      */
     public function forceDelete(User $user, offer $offer): bool
     {
-        return false;
+        return $user->id === $offer->user_id;
     }
 }
