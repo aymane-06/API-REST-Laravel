@@ -1,11 +1,10 @@
-.php
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Controller;
 
 class AuthController extends Controller
 {
@@ -67,7 +66,8 @@ class AuthController extends Controller
         ]);
 
         // Generate access token and refresh token
-        $token = auth()->claims(['type' => 'access'])->login($user);
+        auth()->claims(['type' => 'access'])->login($user);
+        $token = auth()->tokenById($user->id);
         $refreshToken = auth()->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
 
         return response()->json([
@@ -188,7 +188,8 @@ class AuthController extends Controller
             }
 
             // Generate new access token
-            $token = auth()->claims(['type' => 'access'])->login($user);
+            auth()->claims(['type' => 'access'])->login($user);
+            $token = auth()->tokenById($user->id);
 
             return response()->json([
                 'token' => $token,
