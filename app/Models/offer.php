@@ -22,4 +22,12 @@ class offer extends Model
         'is_active',
         'user_id',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }
