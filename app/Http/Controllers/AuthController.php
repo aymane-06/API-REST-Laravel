@@ -90,9 +90,8 @@ class AuthController extends Controller
         ]);
 
         // Generate access token and refresh token
-        auth('api')->claims(['type' => 'access'])->login($user);
-        $token = auth('api')->tokenById($user->id);
-        $refreshToken = auth('api')->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
+                $token = auth('api')->claims(['type' => 'access'])->login($user);
+                $refreshToken = auth('api')->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
 
         return response()->json([
             'user' => $user,
@@ -152,6 +151,7 @@ class AuthController extends Controller
         $refreshToken = auth('api')->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
 
         return response()->json([
+            'user'=> $user,
             'token' => $token,
             'refresh_token' => $refreshToken,
             'type' => 'bearer',
@@ -198,7 +198,7 @@ class AuthController extends Controller
 
         try {
             // Verify refresh token
-            $payload = auth()->manager()->decode(new \PHPOpenSourceSaver\JWTAuth\Token($request->refresh_token));
+            $payload = auth('api')->manager()->decode(new \PHPOpenSourceSaver\JWTAuth\Token($request->refresh_token));
             
             // Check if it's a refresh token
             if (!isset($payload['type']) || $payload['type'] !== 'refresh') {
@@ -212,9 +212,8 @@ class AuthController extends Controller
             }
 
             // Generate new access token
-            auth()->claims(['type' => 'access'])->login($user);
-            $token = auth()->tokenById($user->id);
-
+$token = auth('api')->claims(['type' => 'access'])->login($user);
+            
             return response()->json([
                 'token' => $token,
                 'type' => 'bearer',
