@@ -199,7 +199,6 @@ class AuthController extends Controller
         try {
             // Verify refresh token
             $payload = auth('api')->manager()->decode(new \PHPOpenSourceSaver\JWTAuth\Token($request->refresh_token));
-            
             // Check if it's a refresh token
             if (!isset($payload['type']) || $payload['type'] !== 'refresh') {
                 return response()->json(['message' => 'Invalid refresh token'], 401);

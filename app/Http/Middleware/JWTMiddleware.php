@@ -15,6 +15,7 @@ class JWTMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
             
+            
             // Check if this is an access token (not a refresh token)
             $payload = JWTAuth::parseToken()->getPayload();
             if (!isset($payload['type']) || $payload['type'] !== 'access') {

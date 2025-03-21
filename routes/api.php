@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\JWTMiddleware;
+use App\Http\Middleware\RoleMiddelware;
 use App\Models\offer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,11 +20,12 @@ Route::apiResource('offers', 'App\Http\Controllers\OfferController')
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(JWTMiddleware::class);
+Route::post('/refresh', [AuthController::class, 'refresh']);
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
 // Application routes
-Route::apiResource('applications', 'App\Http\Controllers\ApplicationController')->middleware(JWTMiddleware::class);
+Route::apiResource('applications', 'App\Http\Controllers\ApplicationController')->middleware([JWTMiddleware::class,RoleMiddelware::class.':candidat']);
 Route::patch('applications/{application}/status', 'App\Http\Controllers\ApplicationController@changeStatus')->middleware(JWTMiddleware::class);
 // Competences routes
 Route::apiResource('competences', 'App\Http\Controllers\CompetencesController');
