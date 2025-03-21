@@ -9,6 +9,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    protected $policy = [
+        'App\Models\Offer' => 'App\Policies\OfferPolicy',
+        'App\Models\Competences' => 'App\Policies\CompetencesPolicy',
+        'App\Models\Application' => 'App\Policies\ApplicationPolicy',
+    ];
     public function register(): void
     {
         //
@@ -19,6 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        
     }
 }

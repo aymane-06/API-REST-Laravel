@@ -10,7 +10,7 @@ class OfferPolicy
 {
     public function before(User $user, $ability)
     {
-        if ($user->role->name === 'admin') {
+        if ($user->role === 'admin') {
             return true;
         }
     }
@@ -27,7 +27,7 @@ class OfferPolicy
      */
     public function view(User $user, offer $offer): bool
     {
-        return $user->id === $offer->user_id;
+        return true;
         
     }
 

@@ -8,14 +8,17 @@ use App\Http\Requests\UpdateofferRequest;
 
 class OfferController extends Controller
 {
-    
+    public function __construct()
+    {
+        $this->authorizeResource(offer::class, 'offer');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $offers = offer::all();
-        return response()->json($offers);
+        return response()->json($offers,200);
     }
 
     /**
