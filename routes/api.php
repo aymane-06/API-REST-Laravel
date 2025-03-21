@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', [UserController::class,'index'])->middleware('auth:sanctum');
 Route::apiResource('user', UserController::class)->middleware(JWTMiddleware::class);
-Route::apiResource('offers', 'App\Http\Controllers\OfferController')->middleware(JWTMiddleware::class)->can(['viewAny', 'view', 'create', 'update', 'delete']);
+Route::apiResource('offers', 'App\Http\Controllers\OfferController')->middleware(JWTMiddleware::class);
 // Authentication routes
 
 

@@ -6,6 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
 
+/**
+ * @OA\Info(
+ *     version="1.0.0",
+ *     title="Candidate Management API",
+ *     description="API for managing job offers and applications",
+ *     @OA\Contact(
+ *         name="API Support",
+ *         email="your-email@example.com"
+ *     )
+ * )
+ * 
+ * @OA\Server(
+ *     url=L5_SWAGGER_CONST_HOST,
+ *     description="API Server"
+ * )
+ * 
+ * @OA\SecurityScheme(
+ *     securityScheme="jwt",
+ *     type="http",
+ *     scheme="bearer"
+ * )
+ */
+
 class AuthController extends Controller
 {
     public function __construct()
@@ -58,6 +81,7 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8|confirmed'
         ]);
+        
 
         $user = User::create([
             'name' => $request->name,
@@ -66,16 +90,16 @@ class AuthController extends Controller
         ]);
 
         // Generate access token and refresh token
-        auth()->claims(['type' => 'access'])->login($user);
-        $token = auth()->tokenById($user->id);
-        $refreshToken = auth()->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
+        auth('api')->claims(['type' => 'access'])->login($user);
+        $token = auth('api')->tokenById($user->id);
+        $refreshToken = auth('api')->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
 
         return response()->json([
             'user' => $user,
             'token' => $token,
             'refresh_token' => $refreshToken,
             'type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ], 201);
     }
 
@@ -119,19 +143,19 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        if (!$token = auth()->claims(['type' => 'access'])->attempt($credentials)) {
+        if (!$token = auth('api')->claims(['type' => 'access'])->attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         // Generate refresh token
-        $user = auth()->user();
-        $refreshToken = auth()->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
+        $user = auth('api')->user();
+        $refreshToken = auth('api')->claims(['type' => 'refresh'])->setTTL(43200)->tokenById($user->id); // 30 days
 
         return response()->json([
             'token' => $token,
             'refresh_token' => $refreshToken,
             'type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('api')->factory()->getTTL() * 60
         ]);
     }
 
