@@ -32,3 +32,4 @@ class JWTMiddleware
         return $next($request);
     }
 }
+

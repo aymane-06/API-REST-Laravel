@@ -244,23 +244,4 @@ $token = auth('api')->claims(['type' => 'access'])->login($user);
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
-
-    /**
-     * Get the authenticated User
-     * @OA\Get(
-     *     path="/api/me",
-     *     summary="Get authenticated user details",
-     *     tags={"Authentication"},
-     *     security={{"jwt":{}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="User information",
-     *         @OA\JsonContent(ref="#/components/schemas/User")
-     *     )
-     * )
-     */
-    public function me()
-    {
-        return response()->json(auth()->user());
-    }
 }

@@ -38,23 +38,22 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
-                                        "format": "name",
                                         "example": "John Doe"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "aymane.himame@gmail.Com"
+                                        "example": "user@example.com"
                                     },
                                     "password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password"
+                                        "example": "password123"
                                     },
                                     "password_confirmation": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "password"
+                                        "example": "password123"
                                     }
                                 },
                                 "type": "object"
@@ -64,7 +63,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Success",
+                        "description": "User registered successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -73,21 +72,43 @@
                                             "properties": {
                                                 "name": {
                                                     "type": "string",
-                                                    "format": "name",
                                                     "example": "John Doe"
                                                 },
                                                 "email": {
                                                     "type": "string",
                                                     "format": "email",
-                                                    "example": "aymane.himame@gmail.com"
+                                                    "example": "user@example.com"
                                                 }
                                             },
                                             "type": "object"
                                         },
                                         "token": {
                                             "type": "string",
-                                            "format": "token",
-                                            "example": "2|3d4f5g6h7j8k9l0m"
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "refresh_token": {
+                                            "type": "string",
+                                            "example": "def5020097b3af6..."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The email has already been taken."
                                         }
                                     },
                                     "type": "object"
@@ -97,27 +118,195 @@
                     }
                 }
             }
-        }
-    },
-    "components": {
-        "responses": {
-            "422": {
-                "description": "Invalid data",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "The given data was invalid."
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login a user",
+                "description": "Login user and create token",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "refresh_token": {
+                                            "type": "string",
+                                            "example": "def5020097b3af6..."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
                                 }
-                            },
-                            "type": "object"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
                 }
             }
         },
+        "/api/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh access token",
+                "description": "Refresh access token",
+                "operationId": "2c27d311a2876560fcb5a754b556cdc5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "refresh_token"
+                                ],
+                                "properties": {
+                                    "refresh_token": {
+                                        "type": "string",
+                                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": 3600
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid refresh token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid refresh token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout the user",
+                "description": "Log the user out (Invalidate the token)",
+                "operationId": "fe8f3429cd6979b3b4517e186505f9f9",
+                "responses": {
+                    "200": {
+                        "description": "Successfully logged out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Successfully logged out"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
         "securitySchemes": {
             "jwt": {
                 "type": "http",
